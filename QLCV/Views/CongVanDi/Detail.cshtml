@@ -1,0 +1,44 @@
+﻿@model Model.EF.CongVanDi
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var xuly = ViewBag.xuly;
+}
+<h2>@Model.TenCongVan</h2>
+<div class="content">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nội Dung</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.Raw(Model.NoiDung)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<hr />
+<div>Tổng Số Email Gửi :@ViewBag.Count</div>
+<hr />
+<div>Danh Sách Email: </div>
+<div class="bg-white">
+    @foreach (var item in xuly)
+    {
+        <ul>
+            <li>@item</li>
+        </ul>
+    }
+
+</div>
+<hr />
+<div>Người Gửi: <span>@Model.SendedBy</span></div>
+<hr />
+<div>Ngày Gửi: <span>@Model.SendedDate</span></div>

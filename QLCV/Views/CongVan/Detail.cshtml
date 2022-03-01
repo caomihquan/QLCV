@@ -1,0 +1,38 @@
+﻿@model Model.EF.CongVanDen
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>ID Công Văn: @Model.ID</h2>
+<h2>@Model.TenCongVan</h2>
+<div class="content">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nội Dung</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr >
+                                <td>@Html.Raw(Model.NoiDung)</td>
+                            </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+    </div>
+<hr />
+    <div>Người Tạo: <span>@Model.CreatedBy</span></div>
+    <hr />
+    <div>Ngày Tạo: <span>@Model.CreatedDate</span></div>
+    <hr />
+
+
+<a href="/CongVan/ChuyenTiep/@Model.ID" class="btn btn-success">Chuyển Tiếp</a>
+<a href="/CongVan/Edit/@Model.ID" class="btn btn-success">Sửa</a>
+
+
