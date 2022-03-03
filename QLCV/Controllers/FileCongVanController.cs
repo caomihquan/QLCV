@@ -10,6 +10,8 @@ namespace QLCV.Controllers
     public class FileCongVanController : BaseController
     {
         // GET: FileCongVan
+
+        [HasCredential(RoleID = "VIEW_FILECONGVAN")]
         public ActionResult Index(string searchString, int page = 1, int pageSize = 10)
         {
             var dao = new FileDao();
@@ -20,6 +22,7 @@ namespace QLCV.Controllers
 
 
         [HttpDelete]
+        [HasCredential(RoleID = "DELETE_FILECONGVAN")]
         public ActionResult Delete(long id, string user)
         {
             var result = new FileDao().Delete(id, user);
