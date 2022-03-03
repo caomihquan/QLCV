@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var file = (List<Model.EF.FileCongVan>)ViewBag.File;
 }
 <h2>ID Công Văn: @Model.ID</h2>
 <h2>@Model.TenCongVan</h2>
@@ -25,6 +26,14 @@
             </div>
         </div>
     </div>
+<div>
+    <ul>
+        @foreach(var item in file)
+            {
+                <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.PathID.Substring(37)" target="_blank">@item.PathID.Substring(43)</a></li>
+            }
+    </ul>
+</div>
 <hr />
     <div>Người Tạo: <span>@Model.CreatedBy</span></div>
     <hr />

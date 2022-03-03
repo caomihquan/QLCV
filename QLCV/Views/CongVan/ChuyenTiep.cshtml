@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "ChuyenTiep";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var file = (List<Model.EF.FileCongVan>)ViewBag.File;
 }
 
 @section jsFooter{
@@ -25,12 +26,12 @@
 
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ChuyenTiep", "CongVan", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
-    <h4>CongVanDen</h4>
+    <h4>Chuyển Tiếp Công Văn</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ID)
@@ -50,43 +51,57 @@
             @Html.ValidationMessageFor(model => model.NoiDung, "", new { @class = "text-danger" })
         </div>
     </div>
+    <div class="form-group">
+        <ul>
+            @foreach (var item in file)
+            {
+                <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.PathID.Substring(37)" target="_blank">@item.PathID.Substring(43)</a></li>
+            }
+        </ul>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+
+            @Html.TextBox("file", "", new { @type = "file", @multiple = "" }) <br />
+        </div>
+    </div>
 
     <div class="form-group">
 
         <div class="col-md-10">
-             <div id="imagesManage" class="" role="dialog">
-        <div class="">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Chuyển Tiếp Email</h4>
-                   @* <button type="button" class="close" data-dismiss="modal">&times;</button>*@
-                </div>
+            <div id="imagesManage" class="" role="dialog">
+                <div class="">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Chuyển Tiếp Email</h4>
+                            @* <button type="button" class="close" data-dismiss="modal">&times;</button>*@
+                        </div>
 
-                <div class="modal-body">
-                    <div id="imageList">
+                        <div class="modal-body">
+                            <div id="imageList">
+                            </div>
+                            <div class="clear"></div>
+
+                            <input type="text" id="doc" class="form-control" name="email" value="" placeholder="Nhập Email Cần Gửi" />
+                            <input type="submit" id="btnChooImages" class="btn btn-primary" style="float:right;margin-top:10px;" value="Thêm Email" />
+
+                            <input type="hidden" id="hidProductID" value="@Model.ID" />
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="btnSaveImages">Xác Nhận</button>
+                            @*                    <button type="button" class="btn btn-default" data-dismiss="modal">Thoát</button>*@
+                        </div>
                     </div>
-                    <div class="clear"></div>
-                    
-                        <input type="text" id="doc" class="form-control" name="email" value="" placeholder="Nhập Email Cần Gửi" />
-                        <input type="submit" id="btnChooImages" class="btn btn-primary" style="float:right;margin-top:10px;" value="Thêm Email" />
-                    
-                    <input type="hidden" id="hidProductID" value="@Model.ID" />
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger"  id="btnSaveImages">Xác Nhận</button>
-@*                    <button type="button" class="btn btn-default" data-dismiss="modal">Thoát</button>*@
                 </div>
             </div>
-
-        </div>
-    </div>
             @*<button href="#" data-id="@Model.ID" class="form-control btn-images">Chọn  Chuyển Tiếp Email</button>*@
         </div>
     </div>
 
-   
+
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

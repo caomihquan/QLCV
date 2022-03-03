@@ -23,7 +23,7 @@ namespace QLCV.Controllers
             if (ModelState.IsValid)
             {
                 var dao = new UserDao();
-                var result = dao.Login(model.UserName, Encryptor.MD5Hash(model.Password), true);
+                var result = dao.Login(model.UserName,model.Password, true);
                 if (result == 1)
                 {
                     var user = dao.GetByID(model.UserName);

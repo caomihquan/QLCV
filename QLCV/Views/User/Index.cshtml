@@ -51,7 +51,8 @@
                                 <th>Tên </th>
                                 <th>Loại Tài Khoản </th>
                                 <th>Email</th>
-                                <th>Status</th>
+                                <th>Ngày Tạo</th>
+                                <th>Trạng Thái</th>
                                 <th>#</th>
 
                             </tr>
@@ -67,7 +68,8 @@
                                     <td>@item.Name</td>
                                     <td>@item.GroupID</td>
                                     <td>@item.Email</td>
-                                    <td><a href="#" class="btn-active" data-id="@item.ID">@(item.Status?"True":"False")</a></td>
+                                    <td>@item.CreatedDate</td>
+                                    <td><a href="#" class="btn-active" data-id="@item.ID">@(item.Status?"Kích Hoạt":"Khóa")</a></td>
                                     <td>
                                         <a href="/User/Edit/@item.ID" class="btn btn-success">Sửa</a>
                                         

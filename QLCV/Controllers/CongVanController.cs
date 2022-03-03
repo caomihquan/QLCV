@@ -4,7 +4,10 @@ using Model.EF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -36,10 +39,11 @@ namespace QLCV.Controllers
 
         [HttpPost]
         [ValidateInput(false)]        
-        public ActionResult Create(CongVanDen congvanden)
+        public ActionResult Create(CongVanDen congvanden, List<HttpPostedFileBase> file)
         {
             var session = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             var id = true;
+            string chuoi = "";
             if (ModelState.IsValid)
             {
                 var dao = new CongVanDao();
@@ -48,6 +52,24 @@ namespace QLCV.Controllers
                 congvanden.EmailSend = "<Images></Images>";
                 congvanden.CreatedDate = DateTime.Now;
                 congvanden.ModifiedDate = DateTime.Now;
+                if (file[0] == null)
+                {
+                    congvanden.FilePath = null;
+                }
+                else
+                {
+                    foreach (HttpPostedFileBase f in file)
+                    {
+                        string files = Path.GetFileName(f.FileName);
+                        string _path = Path.Combine(Server.MapPath("/Data"), files);
+                        var video = _path;
+                        f.SaveAs(_path);
+
+                        chuoi = chuoi + "," + video;
+
+                    }
+                    congvanden.FilePath = chuoi;
+                }              
                 id = dao.InsertUpdateCongVanDen(congvanden);
                 if (id)
                 {
@@ -66,22 +88,42 @@ namespace QLCV.Controllers
         public ActionResult Edit(long id)
         {
             var list = new CongVanDao().GetCategoryByID(id);
+            ViewBag.File = new FileDao().ListById(id);
             return View(list);
         }
 
         // POST: Category/Edit/5
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(CongVanDen congvanden)
+        public ActionResult Edit(CongVanDen congvanden,List<HttpPostedFileBase> file)
         {
             var session = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
+            string chuoi = "";
             if (ModelState.IsValid)
             {
                 var dao = new CongVanDao();
                 congvanden.ModifiedBy = session.UserName;
                 congvanden.EmailSend = "<Images></Images>";                
                 congvanden.ModifiedDate = DateTime.Now;
-                bool result = dao.InsertUpdateCongVanDen(congvanden);
+                if (file[0] == null)
+                {
+                    congvanden.FilePath = congvanden.FilePath;
+                }
+                else
+                {
+                    foreach (HttpPostedFileBase f in file)
+                    {
+                        string files = Path.GetFileName(f.FileName);
+                        string _path = Path.Combine(Server.MapPath("/Data"), files);
+                        var video = _path;
+                        f.SaveAs(_path);
+
+                        chuoi = chuoi + "," + video;
+
+                    }
+                    congvanden.FilePath = chuoi;
+                }
+                bool result = dao.UpdateCongVan(congvanden);
                 if (result)
                 {
                     SetAlert("Sửa Thành Công ", "success");
@@ -89,7 +131,7 @@ namespace QLCV.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Cập nhật Sản Phẩm Không thành công");
+                    ModelState.AddModelError("", "Cập nhật Không thành công");
                 }
             }
             return View(congvanden);
@@ -116,6 +158,7 @@ namespace QLCV.Controllers
         public ActionResult ChuyenTiep(long id)
         {
             var list = new CongVanDao().GetCategoryByID(id);
+            ViewBag.File = new FileDao().ListById(id);
             return View(list);
         }
         public JsonResult ListName(string q)
@@ -162,17 +205,18 @@ namespace QLCV.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ChuyenTiep(CongVanDen idd,string tencongvan,string noidung)
+        public ActionResult ChuyenTiep(CongVanDen idd,string tencongvan,string noidung, List<HttpPostedFileBase> file)
         {
             var session = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             var congvandi = new CongVanDi();
             congvandi.TenCongVan = tencongvan;
             congvandi.NoiDung = noidung;
-            congvandi.IDNguoiGui = session.UserID;          
+            congvandi.IDNguoiGui = session.UserID;
             congvandi.SendedDate = DateTime.Now;
             congvandi.SendedBy = session.UserName;
-            congvandi.Status = true;
+            
             var product = new CongVanDao().GetCategoryByID(idd.ID);
+            congvandi.FilePath = product.FilePath;
             var images = product.EmailSend;
             XElement xImages = XElement.Parse(images);
             List<string> listImagesReturn = new List<string>();            
@@ -180,18 +224,14 @@ namespace QLCV.Controllers
             {
                 if (element == null)
                 {
-
                 }
                 else
                 {
                     listImagesReturn.Add(element.Value);
                 }
-                
-
-            }
-            
+            }           
             congvandi.EmailSend = product.EmailSend;
-
+            string chuoi = "";
             foreach (var item in listImagesReturn)
             {
                 string a = System.IO.File.ReadAllText(Server.MapPath("/Assets/Template/CongVanDi.html"));
@@ -201,8 +241,9 @@ namespace QLCV.Controllers
                 a = a.Replace("{{IDNguoiGui}}", session.UserID.ToString());
                 a = a.Replace("{{Email}}", session.Email);
                 a = a.Replace("{{NgayGui}}", DateTime.Now.ToString());
-                new MailHelper().SendMail(item, "Feedback Mới", a);           
+                SendMail(item, "Công Văn Mới", a,file,idd.ID,ref chuoi);
             }
+            congvandi.FilePath = chuoi;
             var id = new CongVanDiDao().Insert(congvandi);
 
             if (id > 0)
@@ -221,11 +262,61 @@ namespace QLCV.Controllers
         {
 
             var model = new CongVanDao().GetCategoryByID(id);
+            ViewBag.File = new FileDao().ListById(id);
             return View(model);
         }
 
 
-        
+        public void SendMail(string toEmailAddress, string subject, string content, List<HttpPostedFileBase> file,long idcongvan, ref string filepath)
+        {
+            var fromEmailAddress = ConfigurationManager.AppSettings["FromEmailAddress"].ToString();
+            var fromEmailDisplayName = ConfigurationManager.AppSettings["FromEmailDisplayName"].ToString();
+            var fromEmailPassword = ConfigurationManager.AppSettings["FromEmailPassword"].ToString();
+            var smtpHost = ConfigurationManager.AppSettings["SMTPHost"].ToString();
+            var smtpPort = ConfigurationManager.AppSettings["SMTPPort"].ToString();
+
+            bool enabledSsl = bool.Parse(ConfigurationManager.AppSettings["EnabledSSL"].ToString());
+
+            string body = content;
+            string chuoi = "";
+            MailMessage message = new MailMessage(new MailAddress(fromEmailAddress, fromEmailDisplayName), new MailAddress(toEmailAddress));
+
+            message.Subject = subject;
+            message.IsBodyHtml = true;
+            message.Body = body;
+            if (file[0] == null)
+            {              
+                var id = new FileDao().ListById(idcongvan);
+                foreach(var item in id)
+                {
+                    string fileName = Path.GetFileName(item.PathID);
+                    byte[] bytes = System.IO.File.ReadAllBytes(item.PathID);
+                    message.Attachments.Add(new Attachment(new MemoryStream(bytes), fileName));
+                }
+                
+            }
+            else
+            {
+                foreach (HttpPostedFileBase f in file)
+                {
+                    string files = Path.GetFileName(f.FileName);
+                    message.Attachments.Add(new Attachment(f.InputStream, files));                    
+                    string _path = Path.Combine(Server.MapPath("/Data"), files);
+                    var video = _path;
+                    f.SaveAs(_path);
+                    chuoi = chuoi + "," + video;
+                }
+                    filepath = chuoi;
+            }
+            var client = new SmtpClient();
+            client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
+            client.Host = smtpHost;
+            client.EnableSsl = enabledSsl;
+            client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
+            client.Send(message);
+        }
+
+
 
 
     }

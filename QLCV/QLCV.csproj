@@ -137,13 +137,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Common\CommonConstants.cs" />
-    <Compile Include="Common\Encryptor.cs" />
     <Compile Include="Common\HasCredentialAttribute.cs" />
     <Compile Include="Common\UserLogin.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CongVanController.cs" />
     <Compile Include="Controllers\CongVanDiController.cs" />
     <Compile Include="Controllers\CredentialController.cs" />
+    <Compile Include="Controllers\FileCongVanController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -3248,6 +3248,7 @@
     <Content Include="Views\Credential\Index.cshtml" />
     <Content Include="Views\Credential\Create.cshtml" />
     <Content Include="Views\Credential\Edit.cshtml" />
+    <Content Include="Views\FileCongVan\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

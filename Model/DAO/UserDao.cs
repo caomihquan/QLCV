@@ -31,9 +31,6 @@ namespace Model.DAO
             return model.ToPagedList(page, pageSize);
         }
 
-
-
-
         public bool InsertUpdateUser(User user)
         {
 

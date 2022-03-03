@@ -6,18 +6,17 @@ namespace Model.EF
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Credential
+    [Table("FileCongVan")]
+    public partial class FileCongVan
     {
         [Key]
         [Column(Order = 0)]
-        [StringLength(50)]
-        [Display(Name = "Vai Trò")]
-        public string RoleID { get; set; }
+        [StringLength(500)]
+        public string PathID { get; set; }
 
         [Key]
         [Column(Order = 1)]
-        [StringLength(20)]
-        [Display(Name = "Nhóm User")]
-        public string UserGroupID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long IDCongVan { get; set; }
     }
 }

@@ -67,11 +67,12 @@ namespace QLCV.Controllers
                     {
                         user.Phone = user.Phone;
                     }
-                    user.Password = Encryptor.MD5Hash(user.Password);
+                    user.Password = user.Password;
                     user.ModifiedBy = session.UserName;
                     user.CreatedBy = session.UserName;
                     user.CreatedDate = DateTime.Now;
                     user.ModifiedDate = DateTime.Now;
+                    user.Status = true;
                     id = dao.InsertUpdateUser(user);
                     if (id)
                     {
@@ -105,7 +106,7 @@ namespace QLCV.Controllers
             if (ModelState.IsValid)
             {
                 var dao = new UserDao();
-                    user.Password = Encryptor.MD5Hash(user.Password);
+                    user.Password =user.Password;
                     user.ModifiedBy = session.UserName;
                     user.ModifiedDate = DateTime.Now;
                     if (user.Address == null)

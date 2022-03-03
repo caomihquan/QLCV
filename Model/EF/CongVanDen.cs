@@ -9,18 +9,22 @@
     [Table("CongVanDen")]
     public partial class CongVanDen
     {
-        [Key]
         public long ID { get; set; }
 
+        [Display(Name = "Tên Công Văn")]
+        [Required(ErrorMessage = "Yêu cầu nhập")]
         [StringLength(250)]
-        [Required(ErrorMessage = "Bạn Phải Nhập Tên Công Văn")]
         public string TenCongVan { get; set; }
-        [Required(ErrorMessage = "Bạn Phải Nhập Nội Dung")]
+        [Display(Name = "Nội Dung")]
         [Column(TypeName = "ntext")]
+        [Required(ErrorMessage = "Yêu cầu nhập")]
         public string NoiDung { get; set; }
 
         [Column(TypeName = "xml")]
         public string EmailSend { get; set; }
+
+        [StringLength(500)]
+        public string FilePath { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 
@@ -32,7 +36,5 @@
 
         [StringLength(50)]
         public string ModifiedBy { get; set; }
-
-        public bool Status { get; set; }
     }
 }

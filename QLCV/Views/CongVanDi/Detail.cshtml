@@ -3,6 +3,8 @@
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var xuly = ViewBag.xuly;
+    
+
 }
 <h2>@Model.TenCongVan</h2>
 <div class="content">
@@ -24,6 +26,23 @@
 
         </div>
     </div>
+</div>
+
+<div>
+    <ul>
+            @if (Model.FilePath == null)
+            {
+
+            }
+            else
+            {
+                string[] tags = Model.FilePath.Substring(1).Split(',');
+                foreach (var item in tags)
+                {
+                    <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.Substring(37)" target="_blank">@item.Substring(43)</a></li>
+                }
+            }
+    </ul>
 </div>
 <hr />
 <div>Tổng Số Email Gửi :@ViewBag.Count</div>

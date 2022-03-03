@@ -62,12 +62,14 @@
     <Compile Include="DAO\CongVanDao.cs" />
     <Compile Include="DAO\CongVanDiDao.cs" />
     <Compile Include="DAO\CredentialDao.cs" />
+    <Compile Include="DAO\FileDao.cs" />
     <Compile Include="DAO\UserDao.cs" />
     <Compile Include="DAO\UserGroupDao.cs" />
     <Compile Include="EF\CongVanDen.cs" />
     <Compile Include="EF\CongVanDi.cs" />
     <Compile Include="EF\CongVanWebDbContext.cs" />
     <Compile Include="EF\Credential.cs" />
+    <Compile Include="EF\FileCongVan.cs" />
     <Compile Include="EF\Role.cs" />
     <Compile Include="EF\User.cs" />
     <Compile Include="EF\UserGroup.cs" />

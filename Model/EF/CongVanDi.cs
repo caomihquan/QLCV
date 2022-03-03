@@ -9,7 +9,6 @@ namespace Model.EF
     [Table("CongVanDi")]
     public partial class CongVanDi
     {
-        
         public long ID { get; set; }
 
         [StringLength(250)]
@@ -17,8 +16,10 @@ namespace Model.EF
 
         [Column(TypeName = "ntext")]
         public string NoiDung { get; set; }
+        [StringLength(500)]
+        public string FilePath { get; set; }
 
-        public long IDNguoiGui { get; set; }
+        public long? IDNguoiGui { get; set; }
 
         [StringLength(500)]
         public string EmailSend { get; set; }
@@ -27,7 +28,5 @@ namespace Model.EF
 
         [StringLength(50)]
         public string SendedBy { get; set; }
-
-        public bool? Status { get; set; }
     }
 }

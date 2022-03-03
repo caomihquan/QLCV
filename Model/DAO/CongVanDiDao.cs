@@ -18,7 +18,7 @@ namespace Model.DAO
         }
         public long Insert(CongVanDi convandi)
         {
-            db.CongVanDis.Add(convandi);
+            db.CongVanDis.Add(convandi);          
             db.SaveChanges();
             return convandi.ID;
         }

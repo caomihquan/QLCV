@@ -16,7 +16,7 @@
             var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
             var text = $('#doc').val()
             if (text=='') {
-                alert('Khong dc de trong');
+                alert('Vui Lòng Nhập Không Để Trống');
             }
             else if (!testEmail.test(text)) {
                 

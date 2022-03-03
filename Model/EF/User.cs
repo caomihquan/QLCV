@@ -12,30 +12,30 @@
         public long ID { get; set; }
 
         [StringLength(50)]
-        [Required(ErrorMessage = "Bạn Phải Nhập UserName")]
+        [Display(Name = "Tên đăng nhập")]
         public string UserName { get; set; }
 
         [StringLength(32)]
-        [Required(ErrorMessage = "Bạn Phải Nhập PassWord")]
+        [Display(Name = "Mật Khẩu")]
         public string Password { get; set; }
 
         [StringLength(20)]
-        [Required(ErrorMessage = "Bạn Phải Chọn Loại Tài Khoản")]
+        [Display(Name = "Nhóm Người Dùng")]
         public string GroupID { get; set; }
 
         [StringLength(50)]
-        [Required(ErrorMessage = "Bạn Phải Họ Tên")]
+        [Display(Name = "Tên")]
         public string Name { get; set; }
 
         [StringLength(50)]
+        [Display(Name = "Địa Chỉ")]
         public string Address { get; set; }
 
         [StringLength(50)]
-        [Required(ErrorMessage = "Bạn Phải Nhập Email")]
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
         [StringLength(50)]
+        [Display(Name = "Số Điện Thoại")]
         public string Phone { get; set; }
 
         public DateTime? CreatedDate { get; set; }

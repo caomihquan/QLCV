@@ -45,21 +45,21 @@
                                 <th>Tên Công Văn</th>
                                 <th>Người Tạo</th>
                                 <th>Ngày Tạo</th>
-                                <th>Status</th>
+                                
                                 <th>#</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr class="row_@item.ID">
+                                <tr id="row_@item.ID">
                                     <td>@item.ID</td>
                                     <td>@item.TenCongVan</td>
                                     <td>@item.CreatedBy</td>
                                     <td>@item.CreatedDate</td>
-                                    <td>@item.Status</td>
+                                    
                                     <td>
-                                        <a href="/CongVan/ChuyenTiep/@item.ID" class="btn btn-success">Chuyển Tiếp</a>
+                                        <a href="/CongVan/ChuyenTiep/@item.ID" class="btn btn-success">Chuyển Tiếp Công Văn</a>
                                         <a href="/CongVan/Detail/@item.ID" class="btn btn-success">Xem Chi Tiết</a>                                 
                                         <a href="/CongVan/Edit/@item.ID" class="btn btn-success">Sửa</a>
                                         @Ajax.ActionLink("Xóa", "Delete", new { @id = item.ID }, new AjaxOptions
