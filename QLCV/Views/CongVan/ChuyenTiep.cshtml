@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "ChuyenTiep";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var file = (List<Model.EF.FileCongVan>)ViewBag.File;
+
 }
 
 @section jsFooter{
@@ -23,6 +23,7 @@
     <script src="/Assets/Admin/js/controller/email.js"></script>
     <script src="/Assets/Admin/jquery-ui.js"></script>
     <script src="/Assets/Admin/js/controller/AutoComplete.js"></script>
+    <script src="~/Assets/Admin/js/controller/clearFile.js"></script>
 
 }
 
@@ -53,9 +54,17 @@
     </div>
     <div class="form-group">
         <ul>
-            @foreach (var item in file)
+            @if (Model.FilePath == null)
             {
-                <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.PathID.Substring(37)" target="_blank">@item.PathID.Substring(43)</a></li>
+
+            }
+            else
+            {
+                string[] tags = Model.FilePath.Substring(1).Split(',');
+                foreach (var item in tags)
+                {
+                    <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.Substring(37)" target="_blank">@item.Substring(43)</a></li>
+                }
             }
         </ul>
     </div>
@@ -91,13 +100,11 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" id="btnSaveImages">Xác Nhận</button>
-                            @*                    <button type="button" class="btn btn-default" data-dismiss="modal">Thoát</button>*@
+                          
                         </div>
                     </div>
-
                 </div>
             </div>
-            @*<button href="#" data-id="@Model.ID" class="form-control btn-images">Chọn  Chuyển Tiếp Email</button>*@
         </div>
     </div>
 
@@ -106,6 +113,7 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input id="chyentiep" type="submit" value="Chyển Tiếp" class="btn btn-success" />
+            <a href="#" class="btn-active btn btn-primary" data-id="@Model.ID">Xóa Tất Cả File</a>
         </div>
     </div>
 </div>

@@ -28,18 +28,6 @@ namespace Model.DAO
 
             return model.ToPagedList(page, pageSize);
         }
-        /*        public IEnumerable<CongVanDen> SearchCongVanDen(int page, int pageSize)
-                {
-                    IQueryable<CongVanDen> model = db.CongVanDens;
-                    if (!string.IsNullOrEmpty(searchString))
-                    {
-
-                      model = model.Where(x => x.TenCongVan.Contains(searchString) || x.ID.ToString().Contains(searchString));
-                    }
-
-                    return model.OrderByDescending(x => x.ID).ToPagedList(page, pageSize);
-                }*/
-
         public bool InsertUpdateCongVanDen(CongVanDen congvanden)
         {
 
@@ -58,26 +46,7 @@ namespace Model.DAO
              int result = db.Database.ExecuteSqlCommand("PSP_InsertCongVanDen @ID,@TenCongVan,@NoiDung,@EmailSend,@CreatedDate,@CreatedBy,@ModifiedDate,@ModifiedBy", param);*/
             db.CongVanDens.Add(congvanden);
             db.SaveChanges();
-            if (!string.IsNullOrEmpty(congvanden.FilePath))
-            {
-                string[] tags = congvanden.FilePath.Substring(1).Split(',');
-                foreach (var tag in tags)
-                {
-                    var tagId = tag;
-                    var existedTag = this.CheckTag(congvanden.ID,tagId);
-                    if (!existedTag)
-                    {
-                        this.InsertContentTag(congvanden.ID, tagId);
-                    }
-                    //insert to content tag
-                    
-
-                }
-            }
-
-                return true;
-            
-
+            return true;
         }
 
 
@@ -89,23 +58,6 @@ namespace Model.DAO
                 content.TenCongVan = entity.TenCongVan;
                 content.NoiDung = entity.NoiDung;
                 content.ModifiedDate = DateTime.Now;
-                
-
-                if (!string.IsNullOrEmpty(content.FilePath = entity.FilePath))
-                {
-                    this.RemoveAllFile(content.ID);
-                    string[] tags = content.FilePath.Substring(1).Split(',');
-                    foreach (var tag in tags)
-                    {
-                        var tagId = tag;
-                        var existedTag = this.CheckTag(content.ID, tagId);
-                        if (!existedTag)
-                        {
-                            this.InsertContentTag(content.ID, tagId);
-                        }
-
-                    }
-                }
                 db.SaveChanges();
                 return true;
             }
@@ -134,23 +86,14 @@ namespace Model.DAO
         }
 
 
-        public void InsertContentTag(long idcongvan, string duongdan)
+        public bool ChangeStatus(long id)
         {
-            var contentTag = new FileCongVan();
-            contentTag.IDCongVan = idcongvan;
-            contentTag.PathID = duongdan;
-            db.FileCongVans.Add(contentTag);
+            var user = db.CongVanDens.Find(id);
+            user.FilePath = null;
             db.SaveChanges();
-        }
-        public bool CheckTag(long id ,string path)
-        {
-            return db.FileCongVans.Count(x => x.IDCongVan == id&&x.PathID==path) > 0;
+            return true;
         }
 
-        public void RemoveAllFile(long contentId)
-        {
-            db.FileCongVans.RemoveRange(db.FileCongVans.Where(x => x.IDCongVan == contentId));
-            db.SaveChanges();
-        }
+
     }
 }

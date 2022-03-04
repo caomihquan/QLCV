@@ -2,43 +2,51 @@
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var file = (List<Model.EF.FileCongVan>)ViewBag.File;
+    
 }
 <h2>ID Công Văn: @Model.ID</h2>
-<h2>@Model.TenCongVan</h2>
+<h2><span>Tên Công Văn: </span>@Model.TenCongVan</h2>
 <div class="content">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Nội Dung</th>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nội Dung</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                            <tr >
-                                <td>@Html.Raw(Model.NoiDung)</td>
-                            </tr>
-                    </tbody>
-                </table>
-                
-            </div>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.Raw(Model.NoiDung)</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
     </div>
+</div>
 <div>
     <ul>
-        @foreach(var item in file)
+        @if (Model.FilePath == null)
+        {
+
+        }
+        else
+        {
+            string[] tags = Model.FilePath.Substring(1).Split(',');
+            foreach (var item in tags)
             {
-                <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.PathID.Substring(37)" target="_blank">@item.PathID.Substring(43)</a></li>
+                <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.Substring(37)" target="_blank">@item.Substring(43)</a></li>
             }
+        }
     </ul>
 </div>
 <hr />
-    <div>Người Tạo: <span>@Model.CreatedBy</span></div>
-    <hr />
-    <div>Ngày Tạo: <span>@Model.CreatedDate</span></div>
-    <hr />
+<div>Người Tạo: <span>@Model.CreatedBy</span></div>
+<hr />
+<div>Ngày Tạo: <span>@Model.CreatedDate</span></div>
+<hr />
 
 
 <a href="/CongVan/ChuyenTiep/@Model.ID" class="btn btn-success">Chuyển Tiếp</a>

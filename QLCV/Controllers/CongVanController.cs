@@ -87,8 +87,7 @@ namespace QLCV.Controllers
         [HasCredential(RoleID = "EDIT_CONGVAN")]
         public ActionResult Edit(long id)
         {
-            var list = new CongVanDao().GetCategoryByID(id);
-            ViewBag.File = new FileDao().ListById(id);
+            var list = new CongVanDao().GetCategoryByID(id);           
             return View(list);
         }
 
@@ -158,7 +157,6 @@ namespace QLCV.Controllers
         public ActionResult ChuyenTiep(long id)
         {
             var list = new CongVanDao().GetCategoryByID(id);
-            ViewBag.File = new FileDao().ListById(id);
             return View(list);
         }
         public JsonResult ListName(string q)
@@ -241,7 +239,7 @@ namespace QLCV.Controllers
                 a = a.Replace("{{IDNguoiGui}}", session.UserID.ToString());
                 a = a.Replace("{{Email}}", session.Email);
                 a = a.Replace("{{NgayGui}}", DateTime.Now.ToString());
-                SendMail(item, "Công Văn Mới", a,file,idd.ID,ref chuoi);
+                SendMail(item, "Công Văn Mới", a,file,product.FilePath,ref chuoi);
             }
             congvandi.FilePath = chuoi;
             var id = new CongVanDiDao().Insert(congvandi);
@@ -262,12 +260,12 @@ namespace QLCV.Controllers
         {
 
             var model = new CongVanDao().GetCategoryByID(id);
-            ViewBag.File = new FileDao().ListById(id);
+           
             return View(model);
         }
 
 
-        public void SendMail(string toEmailAddress, string subject, string content, List<HttpPostedFileBase> file,long idcongvan, ref string filepath)
+        public void SendMail(string toEmailAddress, string subject, string content, List<HttpPostedFileBase> file,string duongdanfile, ref string filepath)
         {
             var fromEmailAddress = ConfigurationManager.AppSettings["FromEmailAddress"].ToString();
             var fromEmailDisplayName = ConfigurationManager.AppSettings["FromEmailDisplayName"].ToString();
@@ -285,15 +283,21 @@ namespace QLCV.Controllers
             message.IsBodyHtml = true;
             message.Body = body;
             if (file[0] == null)
-            {              
-                var id = new FileDao().ListById(idcongvan);
-                foreach(var item in id)
+            {
+                if (duongdanfile == null)
                 {
-                    string fileName = Path.GetFileName(item.PathID);
-                    byte[] bytes = System.IO.File.ReadAllBytes(item.PathID);
-                    message.Attachments.Add(new Attachment(new MemoryStream(bytes), fileName));
+
                 }
-                
+                else
+                {
+                    string[] tags = duongdanfile.Substring(1).Split(',');
+                    foreach (var item in tags)
+                    {
+                        string fileName = Path.GetFileName(item);
+                        byte[] bytes = System.IO.File.ReadAllBytes(item);
+                        message.Attachments.Add(new Attachment(new MemoryStream(bytes), fileName));
+                    }
+                }               
             }
             else
             {
@@ -316,8 +320,14 @@ namespace QLCV.Controllers
             client.Send(message);
         }
 
-
-
-
+        [HttpPost]
+        public JsonResult ClearFilePath(long id)
+        {
+            var result = new CongVanDao().ChangeStatus(id);
+            return Json(new
+            {
+                status = result
+            });
+        }
     }
 }

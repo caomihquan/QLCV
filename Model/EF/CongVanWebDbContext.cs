@@ -15,7 +15,6 @@ namespace Model.EF
         public virtual DbSet<CongVanDen> CongVanDens { get; set; }
         public virtual DbSet<CongVanDi> CongVanDis { get; set; }
         public virtual DbSet<Credential> Credentials { get; set; }
-        public virtual DbSet<FileCongVan> FileCongVans { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserGroup> UserGroups { get; set; }
@@ -44,10 +43,6 @@ namespace Model.EF
 
             modelBuilder.Entity<Credential>()
                 .Property(e => e.UserGroupID)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<FileCongVan>()
-                .Property(e => e.PathID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Role>()

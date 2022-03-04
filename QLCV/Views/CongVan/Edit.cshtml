@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var file = (List<Model.EF.FileCongVan>)ViewBag.File;
+   
 }
 
 
@@ -21,6 +21,8 @@
             customConfig: '/Assets/Admin/js/plugins/ckeditor/config.js',
         });
     </script>
+
+    <script src="~/Assets/Admin/js/controller/clearFile.js"></script>
 }
 
 
@@ -50,11 +52,27 @@
             @Html.ValidationMessageFor(model => model.NoiDung, "", new { @class = "text-danger" })
         </div>
     </div>
-    <div class="form-group">
+@*    <div class="form-group">
         <ul>
             @foreach (var item in file)
             {
                 <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.PathID.Substring(37)" target="_blank">@item.PathID.Substring(43)</a></li>
+            }
+        </ul>
+    </div>*@
+    <div class="form-group">
+        <ul>
+            @if (Model.FilePath == null)
+            {
+
+            }
+            else
+            {
+                string[] tags = Model.FilePath.Substring(1).Split(',');
+                foreach (var item in tags)
+                {
+                    <li style="list-style:none"><i class="far fa-file-alt"></i> <a href="@item.Substring(37)" target="_blank">@item.Substring(43)</a></li>
+                }
             }
         </ul>
     </div>
@@ -67,6 +85,7 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Cập Nhật" class="btn btn-success" />
+    <a href="#" class="btn-active btn btn-primary" data-id="@Model.ID">Xóa Tất Cả File</a>
         </div>
     </div>
 </div>
