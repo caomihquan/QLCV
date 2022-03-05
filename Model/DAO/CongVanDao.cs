@@ -58,6 +58,7 @@ namespace Model.DAO
                 content.TenCongVan = entity.TenCongVan;
                 content.NoiDung = entity.NoiDung;
                 content.ModifiedDate = DateTime.Now;
+                content.FilePath = entity.FilePath;
                 db.SaveChanges();
                 return true;
             }

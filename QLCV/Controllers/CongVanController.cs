@@ -98,6 +98,7 @@ namespace QLCV.Controllers
         {
             var session = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             string chuoi = "";
+            var list = new CongVanDao().GetCategoryByID(congvanden.ID);
             if (ModelState.IsValid)
             {
                 var dao = new CongVanDao();
@@ -106,7 +107,7 @@ namespace QLCV.Controllers
                 congvanden.ModifiedDate = DateTime.Now;
                 if (file[0] == null)
                 {
-                    congvanden.FilePath = congvanden.FilePath;
+                    congvanden.FilePath =list.FilePath;
                 }
                 else
                 {
@@ -144,7 +145,7 @@ namespace QLCV.Controllers
             if (result > 0)
             {
                 SetAlert("Thành Công ", "success");
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "CongVan");
             }
             else
             {
