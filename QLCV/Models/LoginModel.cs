@@ -9,8 +9,8 @@ namespace QLCV.Models
     public class LoginModel
     {
         [Key]
-        [Display(Name = "Tên Đăng Nhập")]
-        [Required(ErrorMessage = "Bạn Phải Nhập Tài Khoản")]
+        [Display(Name = "Tên Đăng Nhập/Email")]
+        [Required(ErrorMessage = "Bạn Phải Nhập Tài Khoản hoặc Email")]
         public string UserName { set; get; }
         [Display(Name = "Mật Khẩu")]
         [Required(ErrorMessage = "Bạn Phải Nhập Mật Khẩu")]

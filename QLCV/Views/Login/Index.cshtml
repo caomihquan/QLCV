@@ -49,9 +49,7 @@
                                     @Html.ValidationSummary(false, "", new { @class = "text-danger" });
                                     <form class="user">
                                         <div class="form-group">
-                                            @*<input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">*@
+      
                                             @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-3" })
                                             @Html.TextBoxFor(model => model.UserName, new { @class = "form-control form-control-user", @autofocus = "autofocus" })
                                         </div>

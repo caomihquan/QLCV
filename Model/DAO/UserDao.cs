@@ -79,7 +79,7 @@ namespace Model.DAO
 
         public List<string> GetListCredential(string userName)
         {
-            var user = db.Users.Single(x => x.UserName == userName);
+            var user = db.Users.Single(x => x.UserName == userName ||x.Email==userName);
             var data = (from a in db.Credentials
                         join b in db.UserGroups on a.UserGroupID equals b.ID
                         join c in db.Roles on a.RoleID equals c.ID
