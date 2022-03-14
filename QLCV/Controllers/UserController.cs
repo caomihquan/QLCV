@@ -105,22 +105,13 @@ namespace QLCV.Controllers
             var session = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             if (ModelState.IsValid)
             {
-                var dao = new UserDao();
-                if (dao.CheckEmail(user.Email))
-                {
-                    ModelState.AddModelError("", "Email đã tồn tại");
-
-                }
-                else if (dao.CheckUserName(user.UserName))
-                {
-                    ModelState.AddModelError("", "tên tài khoản đã tồn tại");
-
-                }
-                else
-                {
+                
+                    var dao = new UserDao();
                     user.Password = user.Password;
                     user.ModifiedBy = session.UserName;
-                    user.ModifiedDate = DateTime.Now;
+                user.ModifiedDate = DateTime.Now;
+                user.Email = user.Email;
+                user.UserName = user.UserName;
                     if (user.Address == null)
                     {
                         user.Address = "";
@@ -156,7 +147,7 @@ namespace QLCV.Controllers
                     {
                         ModelState.AddModelError("", "Cập nhật Không thành công");
                     }
-                }
+                
 
             }
             SetViewBag(user.GroupID);

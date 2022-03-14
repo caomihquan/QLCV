@@ -53,7 +53,7 @@ namespace QLCV.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Thêm Sản Phẩm Không Thành Công");
+                        ModelState.AddModelError("", "Thêm Không Thành Công");
                     }
                 }
                
@@ -82,7 +82,7 @@ namespace QLCV.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Cập nhật Sản Phẩm Không thành công");
+                    ModelState.AddModelError("", "Cập nhật Không thành công");
                 }
             }
             return View(user);

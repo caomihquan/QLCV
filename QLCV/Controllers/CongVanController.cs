@@ -44,6 +44,7 @@ namespace QLCV.Controllers
             var session = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             var id = true;
             string chuoi = "";
+            int byteCount = 0;
             if (ModelState.IsValid)
             {
                 var dao = new CongVanDao();
@@ -58,18 +59,29 @@ namespace QLCV.Controllers
                 }
                 else
                 {
+                    
                     foreach (HttpPostedFileBase f in file)
                     {
-                        string files = Path.GetFileName(f.FileName);
-                        string _path = Path.Combine(Server.MapPath("/Data"), files);
-                        var video = _path;
-                        f.SaveAs(_path);
-
-                        chuoi = chuoi + "," + video;
-
+                        int sizefile = f.ContentLength;
+                        byteCount = sizefile + byteCount;
+                        if (byteCount < 26214400)
+                        {
+                            string files = Path.GetFileName(f.FileName);
+                            string _path = Path.Combine(Server.MapPath("/Data"), files);
+                            var video = _path;
+                            f.SaveAs(_path);
+                            chuoi = chuoi + "," + video;
+                        }
+                        else
+                        {
+                            chuoi = null;
+                            ViewBag.Message = "Tổng Dung Lượng File Không Vượt Quá 25MB";
+                            return View(congvanden);
+                        }
                     }
                     congvanden.FilePath = chuoi;
-                }              
+                    
+                }
                 id = dao.InsertUpdateCongVanDen(congvanden);
                 if (id)
                 {
@@ -98,6 +110,7 @@ namespace QLCV.Controllers
         {
             var session = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             string chuoi = "";
+            int byteCount = 0;
             var list = new CongVanDao().GetCategoryByID(congvanden.ID);
             if (ModelState.IsValid)
             {
@@ -113,26 +126,45 @@ namespace QLCV.Controllers
                 {
                     foreach (HttpPostedFileBase f in file)
                     {
-                        string files = Path.GetFileName(f.FileName);
-                        string _path = Path.Combine(Server.MapPath("/Data"), files);
-                        var video = _path;
-                        f.SaveAs(_path);
+                        int sizefile = f.ContentLength;
+                        byteCount = sizefile + byteCount;
+                        if (byteCount < 26214400)
+                        {
+                            string files = Path.GetFileName(f.FileName);
+                            string _path = Path.Combine(Server.MapPath("/Data"), files);
+                            var video = _path;
+                            f.SaveAs(_path);
+                            chuoi = chuoi + "," + video;
+                        }
+                        else
+                        {
+                            chuoi = list.FilePath;
+                        }
 
-                        chuoi = chuoi + "," + video;
-
+                        
                     }
                     congvanden.FilePath = chuoi;
                 }
-                bool result = dao.UpdateCongVan(congvanden);
-                if (result)
+                if (byteCount < 26214400)
                 {
-                    SetAlert("Sửa Thành Công ", "success");
-                    return RedirectToAction("Index", "CongVan");
+                    bool result = dao.UpdateCongVan(congvanden);
+                    if (result)
+                    {
+                        SetAlert("Sửa Thành Công ", "success");
+                        return RedirectToAction("Index", "CongVan");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Cập nhật Không thành công");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Cập nhật Không thành công");
+                    ViewBag.Message = "Tổng Dung Lượng File Không Vượt Quá 25MB";
+                    return View(congvanden);
                 }
+
+
             }
             return View(congvanden);
         }
@@ -231,6 +263,7 @@ namespace QLCV.Controllers
             }           
             congvandi.EmailSend = product.EmailSend;
             string chuoi = "";
+            int byteCount=0;
             foreach (var item in listImagesReturn)
             {
                 string a = System.IO.File.ReadAllText(Server.MapPath("/Assets/Template/CongVanDi.html"));
@@ -240,19 +273,30 @@ namespace QLCV.Controllers
                 a = a.Replace("{{IDNguoiGui}}", session.UserID.ToString());
                 a = a.Replace("{{Email}}", session.Email);
                 a = a.Replace("{{NgayGui}}", DateTime.Now.ToString());
-                SendMail(item, "Công Văn Mới", a,file,product.FilePath,ref chuoi);
+                SendMail(item, "Công Văn Mới", a, file, product.FilePath, ref chuoi, ref byteCount);
+                
             }
+                if (byteCount < 26214400)
+                {
+
+                }
+                else
+                {
+                    ViewBag.Message = "Tổng Dung Lượng File Không Vượt Quá 25MB";
+                    return View(idd);
+                }
+            
             congvandi.FilePath = chuoi;
             var id = new CongVanDiDao().Insert(congvandi);
 
             if (id > 0)
             {
-                SetAlert("Thêm Thành Công ", "success");
+                SetAlert("Chyển Tiếp Thành Công ", "success");
                 return RedirectToAction("Index", "CongVan");
             }
             else
             {
-                ModelState.AddModelError("", "Thêm Sản Phẩm Không Thành Công");
+                ModelState.AddModelError("", "Không Thành Công");
             }
             return View("Index");
         }
@@ -266,7 +310,7 @@ namespace QLCV.Controllers
         }
 
 
-        public void SendMail(string toEmailAddress, string subject, string content, List<HttpPostedFileBase> file,string duongdanfile, ref string filepath)
+        public void SendMail(string toEmailAddress, string subject, string content, List<HttpPostedFileBase> file,string duongdanfile, ref string filepath,ref int byteCount)
         {
             var fromEmailAddress = ConfigurationManager.AppSettings["FromEmailAddress"].ToString();
             var fromEmailDisplayName = ConfigurationManager.AppSettings["FromEmailDisplayName"].ToString();
@@ -291,34 +335,49 @@ namespace QLCV.Controllers
                 }
                 else
                 {
+                    
                     string[] tags = duongdanfile.Substring(1).Split(',');
                     foreach (var item in tags)
                     {
                         string fileName = Path.GetFileName(item);
                         byte[] bytes = System.IO.File.ReadAllBytes(item);
                         message.Attachments.Add(new Attachment(new MemoryStream(bytes), fileName));
+                        chuoi= chuoi + "," + item;
                     }
-                }               
+                }
+                filepath = chuoi;
             }
             else
             {
+                
                 foreach (HttpPostedFileBase f in file)
                 {
-                    string files = Path.GetFileName(f.FileName);
-                    message.Attachments.Add(new Attachment(f.InputStream, files));                    
-                    string _path = Path.Combine(Server.MapPath("/Data"), files);
-                    var video = _path;
-                    f.SaveAs(_path);
-                    chuoi = chuoi + "," + video;
+                    int sizefile = f.ContentLength;                    
+                    byteCount = sizefile + byteCount;
+                    if (byteCount < 26214400)
+                    {
+                        string files = Path.GetFileName(f.FileName);
+                        message.Attachments.Add(new Attachment(f.InputStream, files));
+                        string _path = Path.Combine(Server.MapPath("/Data"), files);
+                        var video = _path;
+                        f.SaveAs(_path);
+                        chuoi = chuoi + "," + video;
+                    }
                 }
-                    filepath = chuoi;
+                filepath = chuoi;
+
             }
             var client = new SmtpClient();
             client.Credentials = new NetworkCredential(fromEmailAddress, fromEmailPassword);
             client.Host = smtpHost;
             client.EnableSsl = enabledSsl;
             client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
-            client.Send(message);
+            client.Timeout = int.MaxValue;
+            if(byteCount < 26214400)
+            {
+                client.Send(message);
+            }
+            
         }
 
         [HttpPost]

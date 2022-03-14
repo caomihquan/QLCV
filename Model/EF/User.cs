@@ -32,7 +32,6 @@
         public string Name { get; set; }
 
         [StringLength(50)]
-        [Required(ErrorMessage = "Yêu cầu nhập")]
         [Display(Name = "Địa Chỉ")]
         public string Address { get; set; }
 
@@ -41,7 +40,6 @@
         public string Email { get; set; }
 
         [StringLength(50)]
-        [Required(ErrorMessage = "Yêu cầu nhập")]
         [Display(Name = "Số Điện Thoại")]
         public string Phone { get; set; }
 
@@ -55,7 +53,7 @@
 
         [StringLength(50)]
         public string ModifiedBy { get; set; }
-
+        [Display(Name = "Trạng Thái")]
         public bool Status { get; set; }
     }
 }

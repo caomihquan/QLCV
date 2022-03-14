@@ -23,7 +23,7 @@
         [Column(TypeName = "xml")]
         public string EmailSend { get; set; }
 
-        [StringLength(500)]
+        [Column(TypeName = "ntext")]
         public string FilePath { get; set; }
 
         public DateTime? CreatedDate { get; set; }

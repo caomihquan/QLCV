@@ -16,12 +16,12 @@ namespace Model.EF
 
         [Column(TypeName = "ntext")]
         public string NoiDung { get; set; }
-        [StringLength(500)]
+        [Column(TypeName = "ntext")]
         public string FilePath { get; set; }
 
         public long? IDNguoiGui { get; set; }
 
-        [StringLength(500)]
+        [Column(TypeName = "ntext")]
         public string EmailSend { get; set; }
 
         public DateTime? SendedDate { get; set; }

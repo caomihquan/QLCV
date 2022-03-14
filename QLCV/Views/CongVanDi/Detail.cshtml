@@ -30,7 +30,7 @@
 
 <div>
     <ul>
-            @if (Model.FilePath == null)
+            @if (Model.FilePath == null || Model.FilePath=="")
             {
 
             }
@@ -51,9 +51,9 @@
 <div class="bg-white">
     @foreach (var item in xuly)
     {
-        <ul>
+        <ol>
             <li>@item</li>
-        </ul>
+        </ol>
     }
 
 </div>
