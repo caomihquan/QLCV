@@ -111,7 +111,10 @@
     <!-- Custom scripts for all pages-->
     <script src="/Assets/Admin/js/sb-admin-2.min.js"></script>
     <script src="/Assets/Admin/js/sb-admin-2.js"></script>
-    
+    <script>
+        $('#AlertBox').removeClass('hide');
+        $('#AlertBox').delay(3000).slideUp(500);
+    </script>
     <!-- Page level plugins -->
     <!-- Page level custom scripts -->
     @RenderSection("jsFooter", required: false)

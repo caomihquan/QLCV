@@ -19,7 +19,7 @@
                 alert('Vui Lòng Nhập Không Để Trống');
             }
             else if (!testEmail.test(text)) {
-                
+                alert('Không Đúng Định Dạng Email');
             }
             else {
                 $('#imageList').append('<div style="float:left">' + text + '<a href="#" class="btn-delImage"><i class="fa fa-times"></i></a></div>');
